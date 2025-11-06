@@ -1,7 +1,6 @@
 const CACHE_NAME = 'procon-rmc-v1';
 const urlsToCache = [
   '/',
-  '/index.html',
   '/manifest.json',
   '/icon-192x192.png',
   '/icon-512x512.png',
@@ -13,8 +12,13 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        console.log('PWA: Service worker installing');
+        // Use addAll with error handling for development
+        return cache.addAll(urlsToCache).catch((err) => {
+          console.warn('PWA: Some resources failed to cache during install', err);
+          // Continue anyway - cache what we can
+          return Promise.resolve();
+        });
       })
   );
   self.skipWaiting();
@@ -22,6 +26,11 @@ self.addEventListener('install', (event) => {
 
 // Fetch event - serve from cache when offline
 self.addEventListener('fetch', (event) => {
+  // Skip non-GET requests and chrome-extension requests
+  if (event.request.method !== 'GET' || event.request.url.includes('chrome-extension')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
@@ -43,11 +52,18 @@ self.addEventListener('fetch', (event) => {
             caches.open(CACHE_NAME)
               .then((cache) => {
                 cache.put(event.request, responseToCache);
+              })
+              .catch((err) => {
+                console.warn('PWA: Failed to cache:', event.request.url, err);
               });
 
             return response;
           }
-        );
+        ).catch((err) => {
+          console.log('PWA: Fetch failed, offline mode:', err);
+          // Return cached version if available
+          return caches.match(event.request);
+        });
       })
   );
 });
