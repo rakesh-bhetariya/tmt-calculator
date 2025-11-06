@@ -7,9 +7,14 @@ export interface CalculationResult {
   cementQty: number;
   flyashQty: number;
   hasGGBS: boolean;
+  ggbsQty: number;
   basicRate: number;
   cementCost: number;
   flyashCost: number;
+  ggbsCost: number;
+  cementRate: number;
+  flyashRate: number;
+  ggbsRate: number;
   totalRate: number;
 }
 
@@ -61,7 +66,7 @@ export default function ResultsCard({ result }: ResultsCardProps) {
           </div>
           <div className="flex justify-between items-center py-2">
             <span className="text-sm text-muted-foreground">
-              Cement Cost ({result.cementQty.toFixed(2)} kg × ₹5.60)
+              Cement Cost ({result.cementQty.toFixed(2)} kg × ₹{result.cementRate.toFixed(2)})
             </span>
             <span className="font-medium" data-testid="text-cement-cost">
               ₹{result.cementCost.toFixed(2)}
@@ -70,17 +75,21 @@ export default function ResultsCard({ result }: ResultsCardProps) {
           {result.flyashQty > 0 && (
             <div className="flex justify-between items-center py-2">
               <span className="text-sm text-muted-foreground">
-                Flyash Cost ({result.flyashQty.toFixed(2)} kg × ₹2.50)
+                Flyash Cost ({result.flyashQty.toFixed(2)} kg × ₹{result.flyashRate.toFixed(2)})
               </span>
               <span className="font-medium" data-testid="text-flyash-cost">
                 ₹{result.flyashCost.toFixed(2)}
               </span>
             </div>
           )}
-          {result.hasGGBS && (
+          {result.hasGGBS && result.ggbsQty > 0 && (
             <div className="flex justify-between items-center py-2">
-              <span className="text-sm text-muted-foreground">GGBS</span>
-              <Badge variant="outline" className="text-xs">Included</Badge>
+              <span className="text-sm text-muted-foreground">
+                GGBS Cost ({result.ggbsQty.toFixed(2)} kg × ₹{result.ggbsRate.toFixed(2)})
+              </span>
+              <span className="font-medium" data-testid="text-ggbs-cost">
+                ₹{result.ggbsCost.toFixed(2)}
+              </span>
             </div>
           )}
         </div>

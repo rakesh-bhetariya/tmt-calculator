@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,9 +17,11 @@ export interface CalculationInputs {
   cementQty: number;
   flyashQty: number;
   hasGGBS: boolean;
+  ggbsQty: number;
   basicRate: number;
   cementRate: number;
   flyashRate: number;
+  ggbsRate: number;
 }
 
 interface CustomCalculatorProps {
@@ -31,9 +33,11 @@ export default function CustomCalculator({ onCalculate }: CustomCalculatorProps)
   const [cementQty, setCementQty] = useState("280.00");
   const [flyashQty, setFlyashQty] = useState("75.00");
   const [hasGGBS, setHasGGBS] = useState(false);
-  const [basicRate] = useState("2950.00");
-  const [cementRate] = useState("5.60");
-  const [flyashRate] = useState("2.50");
+  const [ggbsQty, setGgbsQty] = useState("50.00");
+  const [basicRate, setBasicRate] = useState("2950.00");
+  const [cementRate, setCementRate] = useState("5.60");
+  const [flyashRate, setFlyashRate] = useState("2.50");
+  const [ggbsRate, setGgbsRate] = useState("3.00");
 
   const handleGradeChange = (grade: string) => {
     setSelectedGrade(grade);
@@ -50,19 +54,17 @@ export default function CustomCalculator({ onCalculate }: CustomCalculatorProps)
       cementQty: parseFloat(cementQty) || 0,
       flyashQty: parseFloat(flyashQty) || 0,
       hasGGBS,
-      basicRate: parseFloat(basicRate),
-      cementRate: parseFloat(cementRate),
-      flyashRate: parseFloat(flyashRate),
+      ggbsQty: parseFloat(ggbsQty) || 0,
+      basicRate: parseFloat(basicRate) || 0,
+      cementRate: parseFloat(cementRate) || 0,
+      flyashRate: parseFloat(flyashRate) || 0,
+      ggbsRate: parseFloat(ggbsRate) || 0,
     });
   };
 
-  useState(() => {
+  useEffect(() => {
     handleCalculate();
-  });
-
-  const handleInputChange = () => {
-    setTimeout(handleCalculate, 0);
-  };
+  }, [selectedGrade, cementQty, flyashQty, hasGGBS, ggbsQty, basicRate, cementRate, flyashRate, ggbsRate]);
 
   return (
     <Card>
@@ -98,10 +100,7 @@ export default function CustomCalculator({ onCalculate }: CustomCalculatorProps)
               type="number"
               step="0.01"
               value={cementQty}
-              onChange={(e) => {
-                setCementQty(e.target.value);
-                handleInputChange();
-              }}
+              onChange={(e) => setCementQty(e.target.value)}
               data-testid="input-cement-qty"
             />
           </div>
@@ -115,10 +114,7 @@ export default function CustomCalculator({ onCalculate }: CustomCalculatorProps)
               type="number"
               step="0.01"
               value={flyashQty}
-              onChange={(e) => {
-                setFlyashQty(e.target.value);
-                handleInputChange();
-              }}
+              onChange={(e) => setFlyashQty(e.target.value)}
               data-testid="input-flyash-qty"
             />
           </div>
@@ -131,10 +127,7 @@ export default function CustomCalculator({ onCalculate }: CustomCalculatorProps)
               <Switch
                 id="ggbs"
                 checked={hasGGBS}
-                onCheckedChange={(checked) => {
-                  setHasGGBS(checked);
-                  handleInputChange();
-                }}
+                onCheckedChange={setHasGGBS}
                 data-testid="switch-ggbs"
               />
               <span className="text-sm text-muted-foreground">
@@ -142,23 +135,73 @@ export default function CustomCalculator({ onCalculate }: CustomCalculatorProps)
               </span>
             </div>
           </div>
+
+          {hasGGBS && (
+            <div className="space-y-2">
+              <Label htmlFor="ggbs-qty" className="text-sm font-medium uppercase tracking-wide">
+                GGBS Quantity (kg/m³)
+              </Label>
+              <Input
+                id="ggbs-qty"
+                type="number"
+                step="0.01"
+                value={ggbsQty}
+                onChange={(e) => setGgbsQty(e.target.value)}
+                data-testid="input-ggbs-qty"
+              />
+            </div>
+          )}
         </div>
 
         <div className="pt-4 border-t">
           <h3 className="text-sm font-medium uppercase tracking-wide mb-4">Rate Parameters</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-sm">Basic Rate (₹)</Label>
-              <Input value={basicRate} disabled className="bg-muted" />
+              <Label htmlFor="basic-rate" className="text-sm">Basic Rate (₹)</Label>
+              <Input 
+                id="basic-rate"
+                type="number"
+                step="0.01"
+                value={basicRate}
+                onChange={(e) => setBasicRate(e.target.value)}
+                data-testid="input-basic-rate"
+              />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm">Cement Rate (₹)</Label>
-              <Input value={cementRate} disabled className="bg-muted" />
+              <Label htmlFor="cement-rate" className="text-sm">Cement Rate (₹/kg)</Label>
+              <Input 
+                id="cement-rate"
+                type="number"
+                step="0.01"
+                value={cementRate}
+                onChange={(e) => setCementRate(e.target.value)}
+                data-testid="input-cement-rate"
+              />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm">Flyash Rate (₹)</Label>
-              <Input value={flyashRate} disabled className="bg-muted" />
+              <Label htmlFor="flyash-rate" className="text-sm">Flyash Rate (₹/kg)</Label>
+              <Input 
+                id="flyash-rate"
+                type="number"
+                step="0.01"
+                value={flyashRate}
+                onChange={(e) => setFlyashRate(e.target.value)}
+                data-testid="input-flyash-rate"
+              />
             </div>
+            {hasGGBS && (
+              <div className="space-y-2">
+                <Label htmlFor="ggbs-rate" className="text-sm">GGBS Rate (₹/kg)</Label>
+                <Input 
+                  id="ggbs-rate"
+                  type="number"
+                  step="0.01"
+                  value={ggbsRate}
+                  onChange={(e) => setGgbsRate(e.target.value)}
+                  data-testid="input-ggbs-rate"
+                />
+              </div>
+            )}
           </div>
         </div>
       </CardContent>

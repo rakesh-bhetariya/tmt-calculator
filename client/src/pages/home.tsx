@@ -13,16 +13,22 @@ export default function Home() {
   const handleCalculate = (inputs: CalculationInputs) => {
     const cementCost = inputs.cementQty * inputs.cementRate;
     const flyashCost = inputs.flyashQty * inputs.flyashRate;
-    const totalRate = inputs.basicRate + cementCost + flyashCost;
+    const ggbsCost = inputs.hasGGBS ? inputs.ggbsQty * inputs.ggbsRate : 0;
+    const totalRate = inputs.basicRate + cementCost + flyashCost + ggbsCost;
 
     setCalculationResult({
       grade: inputs.grade,
       cementQty: inputs.cementQty,
       flyashQty: inputs.flyashQty,
       hasGGBS: inputs.hasGGBS,
+      ggbsQty: inputs.ggbsQty,
       basicRate: inputs.basicRate,
       cementCost,
       flyashCost,
+      ggbsCost,
+      cementRate: inputs.cementRate,
+      flyashRate: inputs.flyashRate,
+      ggbsRate: inputs.ggbsRate,
       totalRate,
     });
   };
