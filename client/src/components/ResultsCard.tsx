@@ -94,12 +94,26 @@ export default function ResultsCard({ result }: ResultsCardProps) {
           )}
         </div>
 
-        <div className="pt-4 border-t">
+        <div className="pt-4 border-t space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-lg font-semibold">Total Rate per m³</span>
-            <span className="text-2xl font-bold text-primary" data-testid="text-total-rate">
+            <span className="text-base font-medium">Rate per m³</span>
+            <span className="text-lg font-semibold" data-testid="text-base-total">
               ₹{result.totalRate.toFixed(2)}
             </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-base font-medium">GST (18%)</span>
+            <span className="text-lg font-semibold" data-testid="text-gst">
+              ₹{(result.totalRate * 0.18).toFixed(2)}
+            </span>
+          </div>
+          <div className="pt-3 border-t">
+            <div className="flex justify-between items-center">
+              <span className="text-lg font-bold">Total (including GST)</span>
+              <span className="text-2xl font-bold text-primary" data-testid="text-total-rate">
+                ₹{(result.totalRate * 1.18).toFixed(2)}
+              </span>
+            </div>
           </div>
         </div>
       </CardContent>
