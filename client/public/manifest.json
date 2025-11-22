@@ -1,0 +1,47 @@
+{
+  "name": "Procon RMC Rate Calculator",
+  "short_name": "Procon RMC",
+  "description": "Ready Mix Concrete rate calculator for PROCON mix designs with custom calculation support",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FFC107",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["business", "utilities", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Custom Calculator",
+      "short_name": "Custom",
+      "description": "Open custom RMC calculator",
+      "url": "/?tab=custom",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Standard Designs",
+      "short_name": "Standard",
+      "description": "View standard PROCON mix designs",
+      "url": "/?tab=standard",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
